@@ -1,37 +1,36 @@
 #!/bin/bash
 
+# Variables de entorno
 BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
 
-echo "-----> Installing FFmpeg"
+echo "-----> Compiling FFmpeg from source"
 
-# Exportar PKG_CONFIG_PATH para que encuentre las bibliotecas necesarias
+# Exportar PKG_CONFIG_PATH
 export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig
 
-# Cambia a tu directorio de compilación
+# Cambia al directorio de compilación
 cd $BUILD_DIR
 
-# Descarga FFmpeg (puedes ajustar la versión si lo deseas)
-FFMPEG_VERSION="7.0"
+# Descarga la versión deseada de FFmpeg
+FFMPEG_VERSION="4.4.4"
 curl -L -o ffmpeg.tar.gz https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.gz
 
-# Descomprime el archivo descargado
-tar xzf ffmpeg-$FFMPEG_VERSION.tar.gz
-
+# Extrae el código fuente
+tar xzf ffmpeg.tar.gz
 cd ffmpeg-$FFMPEG_VERSION
 
-# Configurar y compilar FFmpeg con soporte para libass y otras opciones
-./configure --enable-gpl --enable-libfreetype --enable-filter=drawtext --enable-libx264 --enable-libx265 --disable-shared --enable-static --enable-version3 --disable-debug --disable-ffplay --disable-indev=sndio --disable-outdev=sndio --cc=gcc --enable-fontconfig --enable-gnutls --enable-gmp --enable-libgme --enable-gray --enable-libaom --enable-libfribidi --enable-libvmaf --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-librubberband --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libvorbis --enable-libopus --enable-libtheora --enable-libvidstab --enable-libvo-amrwbenc --enable-libvpx --enable-libwebp --enable-libxml2 --enable-libdav1d --enable-libxvid --enable-libzvbi --enable-libzimg
+# Configura y compila FFmpeg con las opciones mínimas necesarias
+./configure --disable-shared --enable-static --enable-gpl --enable-nonfree \
+    --enable-libfreetype --enable-filter=drawtext
 
-make -j4
+make -j$(nproc)
 
-# Copiar los binarios de FFmpeg al directorio de salida
+# Crea el directorio bin si no existe
 mkdir -p $BUILD_DIR/bin
-cp ffmpeg $BUILD_DIR/bin/
-cp ffprobe $BUILD_DIR/bin/
 
-echo "FFmpeg installed successfully!"
+# Copia los binarios compilados
+cp ffmpeg ffprobe $BUILD_DIR/bin/
 
-
-
+echo "FFmpeg compiled successfully!"
