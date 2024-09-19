@@ -13,7 +13,7 @@ export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig
 cd $BUILD_DIR
 
 # Descarga FFmpeg (puedes ajustar la versión si lo deseas)
-FFMPEG_VERSION="n4.4"
+FFMPEG_VERSION="7.0"
 curl -L -o ffmpeg.tar.gz https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.gz
 
 # Descomprime el archivo descargado
