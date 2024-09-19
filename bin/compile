@@ -10,7 +10,7 @@ echo "-----> Installing FFmpeg"
 cd $BUILD_DIR
 
 # Descarga FFmpeg (puedes ajustar la versión si lo deseas)
-FFMPEG_VERSION="n4.4"
+FFMPEG_VERSION="7.0.2"
 curl -L -o ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.bz2
 tar xjf ffmpeg.tar.bz2
 cd ffmpeg-$FFMPEG_VERSION
