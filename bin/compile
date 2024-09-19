@@ -6,17 +6,24 @@ ENV_DIR=$3
 
 echo "-----> Installing FFmpeg"
 
+# Exportar PKG_CONFIG_PATH para que encuentre las bibliotecas necesarias
+export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig
+
 # Cambia a tu directorio de compilación
 cd $BUILD_DIR
 
 # Descarga FFmpeg (puedes ajustar la versión si lo deseas)
-FFMPEG_VERSION="7.0.2"
-curl -L -o ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.bz2
-tar xjf ffmpeg.tar.bz2
+FFMPEG_VERSION="n4.4"
+curl -L -o ffmpeg.tar.gz https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.gz
+
+# Descomprime el archivo descargado
+tar xzf ffmpeg.tar.gz
+
 cd ffmpeg-$FFMPEG_VERSION
 
-# Configurar y compilar FFmpeg con soporte para drawtext y libfreetype
-./configure --enable-gpl --enable-libfreetype --enable-filter=drawtext --enable-libx264 --enable-libx265 --disable-shared --enable-static --enable-version3 --disable-debug --disable-ffplay --disable-indev=sndio --disable-outdev=sndio --cc=gcc --enable-fontconfig --enable-frei0r --enable-gnutls --enable-gmp --enable-libgme --enable-gray --enable-libaom --enable-libfribidi --enable-libass --enable-libvmaf --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-librubberband --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libvorbis --enable-libopus --enable-libtheora --enable-libvidstab --enable-libvo-amrwbenc --enable-libvpx --enable-libwebp --enable-libxml2 --enable-libdav1d --enable-libxvid --enable-libzvbi --enable-libzimg
+# Configurar y compilar FFmpeg con soporte para libass y otras opciones
+./configure --enable-gpl --enable-libfreetype --enable-filter=drawtext --enable-libx264 --enable-libx265 --disable-shared --enable-static --enable-version3 --disable-debug --disable-ffplay --disable-indev=sndio --disable-outdev=sndio --cc=gcc --enable-libass --enable-fontconfig --enable-gnutls --enable-gmp --enable-libgme --enable-gray --enable-libaom --enable-libfribidi --enable-libvmaf --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-librubberband --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libvorbis --enable-libopus --enable-libtheora --enable-libvidstab --enable-libvo-amrwbenc --enable-libvpx --enable-libwebp --enable-libxml2 --enable-libdav1d --enable-libxvid --enable-libzvbi --enable-libzimg
+
 make -j4
 
 # Copiar los binarios de FFmpeg al directorio de salida
