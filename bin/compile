@@ -1,36 +1,35 @@
 #!/bin/bash
 
-# Variables de entorno
 BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
 
-echo "-----> Compiling FFmpeg from source"
+echo "-----> Installing FFmpeg"
 
-# Exportar PKG_CONFIG_PATH
-export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig
+# Exportar PKG_CONFIG_PATH para que encuentre las bibliotecas necesarias
+export PKG_CONFIG_PATH="/usr/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH"
 
-# Cambia al directorio de compilación
+# Cambia a tu directorio de compilación
 cd $BUILD_DIR
 
-# Descarga la versión deseada de FFmpeg
+# Descarga FFmpeg (ajusta la versión si es necesario)
 FFMPEG_VERSION="4.4.4"
 curl -L -o ffmpeg.tar.gz https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.gz
 
-# Extrae el código fuente
+# Descomprime el archivo descargado
 tar xzf ffmpeg.tar.gz
+
 cd ffmpeg-$FFMPEG_VERSION
 
-# Configura y compila FFmpeg con las opciones mínimas necesarias
+# Configurar y compilar FFmpeg con las opciones necesarias
 ./configure --disable-shared --enable-static --enable-gpl --enable-nonfree \
     --enable-libfreetype --enable-filter=drawtext
 
 make -j$(nproc)
 
-# Crea el directorio bin si no existe
+# Copiar los binarios de FFmpeg al directorio de salida
 mkdir -p $BUILD_DIR/bin
-
-# Copia los binarios compilados
-cp ffmpeg ffprobe $BUILD_DIR/bin/
+cp ffmpeg $BUILD_DIR/bin/
+cp ffprobe $BUILD_DIR/bin/
 
 echo "FFmpeg compiled successfully!"
